@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  miniconda_jupyter_server:
+    build: ./
+    command: jupyter server --config=./config/jupyter_server_config.py
+    restart: unless-stopped
+    container_name: task_2 
+    image: miniconda_jupyter_server 
+    ports:
+      - "8888:8888"
+    volumes: 
+      - ../:/usr/src/miniconda_jupyter_server
