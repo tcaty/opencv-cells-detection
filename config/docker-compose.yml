@@ -5,9 +5,9 @@ services:
     build: ./
     command: jupyter server --config=./config/jupyter_server_config.py
     restart: unless-stopped
-    container_name: task_2 
+    container_name: opencv_cells_detection
     image: miniconda_jupyter_server 
     ports:
-      - "8888:8888"
+      - "5522:8888"
     volumes: 
       - ../:/usr/src/miniconda_jupyter_server
