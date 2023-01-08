@@ -1,6 +1,16 @@
 from enum import Enum
 
 
+class Pixel(Enum):
+    WHITE_GRAY = 255
+    BLACK_GRAY = 0
+    WHITE_RGB = [255, 255, 255]
+    BLACK_RGB = [0, 0, 0]
+    RED = [255, 0, 0]
+    GREEN = [0, 255, 0]
+    BLUE = [0, 0, 255]
+
+
 class FilterAlg(Enum):
     GAUSSIAN = 0
     MEDIAN = 1

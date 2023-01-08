@@ -1,16 +1,16 @@
 import numpy as np
 
 from .image import Image
+from utils.helpers.enums import Pixel
 
 
 class CellImage(Image):
     def delete_description(self) -> None:
-        black_pixel, white_pixel = 0, 255
         description_rows = [
-            set([black_pixel, white_pixel]),
-            set([black_pixel]),
-            set([white_pixel])
+            set([Pixel.WHITE_GRAY.value, Pixel.BLACK_GRAY.value]),
+            set([Pixel.BLACK_GRAY.value]),
+            set([Pixel.WHITE_GRAY.value])
         ]
-        self._image = np.array(
-            list(filter(lambda row: set(row) not in description_rows, self._image))
+        self._src = np.array(
+            list(filter(lambda row: set(row) not in description_rows, self._src))
         )

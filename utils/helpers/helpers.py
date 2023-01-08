@@ -2,8 +2,6 @@ import os
 import cv2
 import matplotlib.pyplot as plt
 
-from utils.helpers import consts
-
 
 def get_images(dir_path):
     file_names = os.listdir(dir_path)
@@ -31,18 +29,3 @@ def create_algs_wrapper(map_alg_name_to_tuple):
         transformed_images = current_alg(image, **default_params)
         return transformed_images
     return algs_wrapper
-
-
-def get_transformed_image_variants(image, algs_data, algs_wrapper):
-    transformed_image_variants = []
-    for alg_data in algs_data:
-        args = alg_data.get(consts.PARAMS)
-        transformed_image_variants.append({
-            consts.IMAGE: algs_wrapper(
-                image,
-                alg_data[consts.ALG],
-                **(args if args else {})
-            ),
-            consts.TITLE: alg_data[consts.ALG]
-        })
-    return transformed_image_variants

@@ -17,7 +17,7 @@ MAP_MORP_OPERATION_TO_TUPLE = {
     MorphOperation.DILATION: (cv.dilate, {'kernel': default_kernel, 'iterations': 1}),
     MorphOperation.OPENING: (cv.morphologyEx, {'op': cv.MORPH_OPEN, 'kernel': default_kernel}),
     MorphOperation.CLOSING: (
-        cv.morphologyEx, {'op': cv.morphologyEx, 'kernel': default_kernel})
+        cv.morphologyEx, {'op': cv.MORPH_CLOSE, 'kernel': default_kernel})
 }
 
 MAP_EDGES_DETECTING_ALG_TO_TUPLE = {
