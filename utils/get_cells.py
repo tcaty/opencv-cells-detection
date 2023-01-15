@@ -1,6 +1,7 @@
+import cv2 as cv
 import numpy as np
 
 
-def get_cells_by_hand(image, threshold_value):
-    binary_mask = (image > threshold_value).astype(np.uint8)
-    return binary_mask
+def get_cells_by_hand(image: cv.Mat, threshold_value, backgroundIsDarker=True):
+    binary_mask = image > threshold_value if backgroundIsDarker else image < threshold_value
+    return binary_mask.astype(np.uint8)

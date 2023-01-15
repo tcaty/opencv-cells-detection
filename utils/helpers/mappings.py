@@ -9,6 +9,8 @@ MAP_FILTER_ALG_TO_TUPLE = {
     FilterAlg.AVERAGE: (cv.blur, {'ksize': (10, 10)}),
     FilterAlg.MEDIAN: (cv.medianBlur, {'ksize': 5}),
     FilterAlg.GAUSSIAN: (cv.GaussianBlur, {'ksize': (3, 3), 'sigmaX': 0}),
+    FilterAlg.BILATERAL: ((cv.bilateralFilter), {
+                          'd': 9, 'sigmaColor': 75, 'sigmaSpace': 75})
 }
 
 default_kernel = np.ones((5, 5), np.uint8)
@@ -27,5 +29,15 @@ MAP_EDGES_DETECTING_ALG_TO_TUPLE = {
 }
 
 MAP_CONTOURS_DETECTING_ALG_TO_TUPLE = {
-    ContoursDetectingAlg.BY_HAND: (get_cells_by_hand, {'threshold_value': 100})
+    ContoursDetectingAlg.SIMPLE_TRESHOLDING: (get_cells_by_hand, {'threshold_value': 100}),
+    ContoursDetectingAlg.TRESHOLDING: (cv.threshold, {'thresh': 100, 'maxval': 255, 'type': cv.THRESH_BINARY}),
+    ContoursDetectingAlg.ADAPTIVE_TRESHOLDING: (
+        cv.adaptiveThreshold,
+        {'maxValue': 255, 'adaptiveMethod': cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+            'thresholdType': cv.THRESH_BINARY, 'blockSize': 11, 'C': 2}
+    ),
+    ContoursDetectingAlg.OTSU_BINARIZATION: (
+        cv.threshold,
+        {'thresh': 0, 'maxval': 255, 'type': cv.THRESH_BINARY + cv.THRESH_OTSU}
+    )
 }

@@ -15,6 +15,7 @@ class FilterAlg(Enum):
     GAUSSIAN = 0
     MEDIAN = 1
     AVERAGE = 2
+    BILATERAL = 3
 
 
 class MorphOperation(Enum):
@@ -30,4 +31,7 @@ class EdgesDetectingAlg(Enum):
 
 
 class ContoursDetectingAlg(Enum):
-    BY_HAND = 0
+    SIMPLE_TRESHOLDING = 0
+    TRESHOLDING = 1
+    ADAPTIVE_TRESHOLDING = 2
+    OTSU_BINARIZATION = 3

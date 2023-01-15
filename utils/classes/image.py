@@ -9,6 +9,7 @@ from utils.helpers.mappings import MAP_FILTER_ALG_TO_TUPLE, MAP_EDGES_DETECTING_
 class Image:
     def __init__(self, src: cv.Mat) -> None:
         self._src = src
+        self._meta = ()  # store for last actions additional data
 
     def __alg(map_alg_name_to_tuple):  # type: ignore
         def decorator(method):
@@ -16,7 +17,10 @@ class Image:
                 method(self, alg, overwrite)
                 alg_wrapper = create_algs_wrapper(
                     map_alg_name_to_tuple)
-                alg_result = alg_wrapper(self._src, alg, **params)
+                temp_result = alg_wrapper(self._src, alg, **params)
+                result_is_tuple = isinstance(temp_result, tuple)
+                alg_result = temp_result if not result_is_tuple else temp_result[-1]
+                self._meta = temp_result[:-1]
                 if (overwrite):
                     self._src = alg_result
                 return alg_result
@@ -47,3 +51,7 @@ class Image:
     @property
     def src(self) -> cv.Mat:
         return self._src
+
+    @property
+    def meta(self) -> tuple:
+        return self._meta
