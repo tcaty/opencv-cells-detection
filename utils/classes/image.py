@@ -10,6 +10,7 @@ class Image:
     def __init__(self, src: cv.Mat) -> None:
         self._src = src
         self._meta = ()  # store for last actions additional data
+        self._original = src
 
     def __alg(map_alg_name_to_tuple):  # type: ignore
         def decorator(method):
@@ -55,3 +56,7 @@ class Image:
     @property
     def meta(self) -> tuple:
         return self._meta
+
+    @property
+    def original(self) -> cv.Mat:
+        return self._original
