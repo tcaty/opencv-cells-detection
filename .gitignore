@@ -2,3 +2,6 @@
 .ipynb_checkpoints
 */**/__pycache__
 cells_images
+results.zip
+valid_bf_imgs_dir_png
+results

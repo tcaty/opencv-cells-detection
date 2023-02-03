@@ -7,10 +7,11 @@ from utils.helpers.mappings import MAP_FILTER_ALG_TO_TUPLE, MAP_EDGES_DETECTING_
 
 
 class Image:
-    def __init__(self, src: cv.Mat) -> None:
+    def __init__(self, src: cv.Mat, file_name: str) -> None:
         self._src = src
         self._meta = ()  # store for last actions additional data
         self._original = src
+        self._file_name = file_name
 
     def __alg(map_alg_name_to_tuple):  # type: ignore
         def decorator(method):
@@ -60,3 +61,7 @@ class Image:
     @property
     def original(self) -> cv.Mat:
         return self._original
+
+    @property
+    def file_name(self) -> str:
+        return self._file_name

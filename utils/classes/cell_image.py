@@ -18,49 +18,26 @@ class CellImage(Image):
         self._src = image_with_deleted_descr
         self._original = image_with_deleted_descr
 
-    def get_cells_using_tresholding(self):
+    def get_cells(self):
         self.filter(alg=FilterAlg.GAUSSIAN, ksize=(7, 7))
-        self.filter(alg=FilterAlg.AVERAGE, ksize=(27, 27))
+        self.filter(alg=FilterAlg.AVERAGE, ksize=(13, 13))
         self.detect_contours(alg=ContoursDetectingAlg.OTSU_BINARIZATION)
-        self.morph_transform(alg=MorphOperation.OPENING,
-                             kernel=np.ones((13, 13), np.uint8), iterations=2)
-        return self._src
-
-    def get_cells_using_sbd(self):
-        # image preprocessing
-        self.filter(alg=FilterAlg.GAUSSIAN)
-        self.detect_contours(alg=ContoursDetectingAlg.OTSU_BINARIZATION)
-        self.morph_transform(alg=MorphOperation.OPENING)
-        self.morph_transform(alg=MorphOperation.CLOSING,
-                             kernel=np.ones((7, 7), np.uint8), iterations=2)
-
         contours, _ = cv.findContours(
             self.src, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-        min_cell_area = 1000  # TODO: detect this one automaticaly
-        contours = [contour for contour in contours if cv.contourArea(
-            contour) > min_cell_area]
+        contours = [
+            contour for contour in contours if cv.contourArea(contour) > 1500]
 
-        params = cv.SimpleBlobDetector_Params()
-        params.filterByInertia = True
-        params.filterByConvexity = True
-        params.filterByCircularity = True
-        params.filterByArea = False
-        params.minInertiaRatio = 0.01
-        params.maxInertiaRatio = 0.7
-        params.minConvexity = 0.8
-        params.minCircularity = 0.1
+        filtered_contours = []
+        deltas = []
+        for contour in contours:
+            epsilon = 0.02 * cv.arcLength(contour, True)
+            approx = cv.approxPolyDP(contour, epsilon, True)
+            delta = cv.arcLength(contour, True) - cv.arcLength(approx, True)
+            deltas.append(delta)
+            if cv.contourArea(contour) > 1500 and delta < 100:
+                filtered_contours.append(contour)
 
-        detector = cv.SimpleBlobDetector_create(params)
-        keypoints = detector.detect(self.src)
-        cells_contours = []
-        for keypoint in keypoints:
-            x, y = tuple(map(int, keypoint.pt))
-            for contour in contours:
-                if cv.pointPolygonTest(contour, (x, y), False) > 0:
-                    cells_contours.append(contour)
+        self.transform(lambda src: np.full_like(src, 0))
+        cv.fillPoly(self.src, filtered_contours, 255)
 
-        # noiseless mask
-        noiseless_mask = np.zeros_like(self.src)
-        cv.fillPoly(noiseless_mask, contours, 1)
-        self._src = noiseless_mask
-        return self.src
+        return self.src, deltas

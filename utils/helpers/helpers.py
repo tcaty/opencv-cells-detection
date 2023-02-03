@@ -4,13 +4,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def get_images(dir_path, limit):
+def get_images(dir_path, limit=None):
     file_names = os.listdir(dir_path)
     images_file_names = list(
         filter(lambda file_name: '.txt' not in file_name, file_names))
     images_file_names.sort()
-    images_file_names = images_file_names[:limit]
-    return [cv2.imread(f'{dir_path}/{image_file_name}', cv2.COLOR_BGR2GRAY) for image_file_name in images_file_names]
+    images_file_names = images_file_names[:
+                                          limit] if limit else images_file_names
+    return [(cv2.imread(f'{dir_path}/{image_file_name}', cv2.COLOR_BGR2GRAY), image_file_name) for image_file_name in images_file_names]
 
 
 def show_images(image_with_title_tuples, grid=(2, 2), size_inches=(10, 10)):
